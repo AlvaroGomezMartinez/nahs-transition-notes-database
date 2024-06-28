@@ -1,8 +1,7 @@
 // Define the doGet function to create the web app interface
 function doGet() {
-  // Create a UI for the web app
-  var htmlOutput = HtmlService.createHtmlOutputFromFile('Index')
-    .setTitle('Teacher Data Form')
+  var htmlOutput = HtmlService.createHtmlOutputFromFile('1-Index')
+    .setTitle('NAHS Transition Input')
   return htmlOutput;
 }
 
@@ -62,36 +61,36 @@ function fetchInitialData() {
 }
 
 // Function to update an existing record
-function updateRecord(formData) {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Lodash Output');
-  const data = sheet.getDataRange().getValues();
+// function updateRecord(formData) {
+//   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Lodash Output');
+//   const data = sheet.getDataRange().getValues();
 
-  // Find the row to update based on ID
-  for (var i = 1; i < data.length; i++) {   // Start from 1 assuming header row
-    if (data[i][2] == formData.id) {    // ID is in the 3rd column of Lodash Output
-      sheet.getRange(i + 1, 6).setValue(formData.trnfrGrd);    // +1 to adjust for header row
-      sheet.getRange(i + 1, 7).setValue(formData.currGrd); // figure out how to put it in the right cell
-      sheet.getRange(i + 1, 8).setValue(formData.growth); // figure out how to put it in the right cell
-      sheet.getRange(i + 1, 9).setValue(formData.progress); // figure out how to put it in the right cell
-      break;
-    }
-  }
+//   // Find the row to update based on ID
+//   for (var i = 1; i < data.length; i++) {   // Start from 1 assuming header row
+//     if (data[i][2] == formData.id) {    // ID is in the 3rd column of Lodash Output
+//       sheet.getRange(i + 1, 6).setValue(formData.trnfrGrd);    // +1 to adjust for header row
+//       sheet.getRange(i + 1, 7).setValue(formData.currGrd); // figure out how to put it in the right cell
+//       sheet.getRange(i + 1, 8).setValue(formData.growth); // figure out how to put it in the right cell
+//       sheet.getRange(i + 1, 9).setValue(formData.progress); // figure out how to put it in the right cell
+//       break;
+//     }
+//   }
 
-return fetchInitialData();  // Return updated data after modification
-}
+// return fetchInitialData();  // Return updated data after modification
+// }
 
-// Function to delete a record based on ID
-function deleteRecord(id) {
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Lodash Output');
-  const data = sheet.getDataRange().getValues();
+// // Function to delete a record based on ID
+// function deleteRecord(id) {
+//   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Lodash Output');
+//   const data = sheet.getDataRange().getValues();
 
-  // Find the row to delete based on ID
-  for (var i = 1; i < data.length; i++) {   // Start from 1 assuming header row
-    if (data[i][0] == id) {    // Assuming ID is in the first column
-      sheet.deleteRow(i + 1);    // +1 to adjust for header row
-      break;
-    }
-  }
+//   // Find the row to delete based on ID
+//   for (var i = 1; i < data.length; i++) {   // Start from 1 assuming header row
+//     if (data[i][0] == id) {    // Assuming ID is in the first column
+//       sheet.deleteRow(i + 1);    // +1 to adjust for header row
+//       break;
+//     }
+//   }
 
-return fetchInitialData();  // Return updated data after deletion
-}
+// return fetchInitialData();  // Return updated data after deletion
+// }
