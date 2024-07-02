@@ -39,7 +39,6 @@
       htmlTable += '<td>' + row[7] + '</td>'; // Academic Growth
       htmlTable += '<td>' + row[8] + '</td>'; // Progress
 
-      // htmlTable += '<td><button class="btn btn-primary" onclick="editRecord(' + JSON.stringify(row).replace(/"/g, '&quot;') + ')">Edit</button></td>';
       htmlTable += '<td><button class="btn btn-primary edit-button" onclick="editRecord(' + JSON.stringify({
         index: row[0],
         id: row[1],
@@ -50,7 +49,6 @@
 
       htmlTable += '</tr>';
     });
-
 
     htmlTable += '</tbody>';
 
@@ -83,11 +81,6 @@
         }
       });
 
-      // Enable the form fields if they are disabled
-      // var formFields = document.querySelectorAll('#form input, #form select, #form textarea');
-      // formFields.forEach(function(field) {
-      //   field.disabled = false;
-      // });
     }
   </script>
 
@@ -125,31 +118,29 @@
         displayTable(data); // Call displayTable with the fetched data
       }).fetchInitialData();
     };
-  // Function to fetch initial data and display the table upon window load
-  // window.onload = function() {
-  //   google.script.run.withSuccessHandler(displayTable).fetchInitialData();
-  // };
   </script>
 
 </head>
 
 <body>
-  <div class="container">
-    <div class="row text-center">
-      <div class="col-3">
+  <div class="container text-center">
+    <div class="row">
+      <div class="col-md-5">
         <img src="https://i.imgur.com/xINeSCJ.png" class="rounded float-start" alt="NAHS Logo">
       </div>
-      <div class="col">
-        <h1 class="display-1">AEP<br>Personalized Transition Plan</h1>
+      <div class="col-md-7">
+        <h1 class="display-1">AEP Personalized Transition Plan</h1>
       </div>
       <hr>
+    </div>
+    <div class="row">
       <p class="text-start"><b>Purpose: </b>This web app facilitates the creation of a personalized transition plan for students assigned to NAHS. The personalized transition plan is part of a coordination system between transition teams at each high school campus and NAHS as required by <a href="https://texas.public.law/statutes/tex._educ._code_section_37.023" target="_blank">Texas Education Code §37.023</a>. Your prompt attention to providing the needed information is important to meeting the required timelines.</p>
       <p class="text-start"><b>Instructions: </b>Look at the roster on the table below. If you have a student who is missing information in the last four columns, click on the blue <i>Edit</i> button. The common information will fill in on the <i>Teacher Data Form</i>. Fill in the fields in the <i>Teacher Data Form</i> with the missing data then click on the green <i>Update Record</i> button below it.</p>
       </p>
       <hr>
     </div>
     <div class="row">
-      <div class="col-3">
+      <div class="col-3 text-start">
         <h2>Teacher Data Form</h2>
         <!-- Form for adding/updating records -->
         <form id="form">
@@ -191,15 +182,6 @@
       </div>
       <div class="col-9 text-center">
         <h2>Roster</h2>
-
-        <!-- <nav class="navbar bg-body-tertiary">
-          <div class="container-fluid">
-            <form class="d-flex" role="search" id="search-button">
-              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-              <button class="btn btn-outline-success" type="submit">Search</button>
-            </form>
-          </div>
-        </nav> -->
 
         <div id="tableContainer" class="table-responsive">
           <div class="spinner-border text-center-primary" role="status">
