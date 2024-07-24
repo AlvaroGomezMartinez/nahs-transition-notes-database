@@ -65,9 +65,9 @@ function fetchInitialData() {
 //   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Lodash Output');
 //   const data = sheet.getDataRange().getValues();
 
-//   // Find the row to update based on ID
+//   // Find the row to update based on the Index
 //   for (var i = 1; i < data.length; i++) {   // Start from 1 assuming header row
-//     if (data[i][2] == formData.id) {    // ID is in the 3rd column of Lodash Output
+//     if (data[i][0] == formData.id) {    // ID is in the 3rd column of Lodash Output
 //       sheet.getRange(i + 1, 6).setValue(formData.trnfrGrd);    // +1 to adjust for header row
 //       sheet.getRange(i + 1, 7).setValue(formData.currGrd); // figure out how to put it in the right cell
 //       sheet.getRange(i + 1, 8).setValue(formData.growth); // figure out how to put it in the right cell
