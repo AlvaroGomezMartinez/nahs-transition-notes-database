@@ -61,7 +61,7 @@
   </script>
 
   <script>
-  // Function to edit a record
+  // Function to add data from the Roster spreadsheet into the Teacher Data Form
     function editRecord(rowData) {
       // Safely attempt to set the value of each element, if it exists
       const elements = {
@@ -80,32 +80,74 @@
           console.error(`Element with ID '${key}' not found.`);
         }
       });
-
     }
   </script>
 
   <script>
-  // Function to submit form data to update an existing record
-  function updateForm() {
-    var id = document.getElementById("id").value;
-    var trnfrGrd = document.getElementById("trnfrGrd").value;
-    var currGrd = document.getElementById("currGrd").value;
-    var growth = document.getElementById("growth").value;
-    var progress = document.getElementById("progress").value;
+  // Function to submit Teacher Data Form data to update an existing record
+  document.getElementById("updateRecordBtn").addEventListener("click", updateRecord);
 
-    // Construct formData object
-    var formData = {
-      id: id,
-      trnfrGrd: trnfrGrd,
-      currGrd: currGrd,
-      growth: growth,
-      progress: progress
+  function updateRecord() {
+    // Collect form data into an object
+    const formData = {
+      index: document.getElementById("index").value,
+      id: document.getElementById("id").value,
+      name: document.getElementById("name").value,
+      grade: document.getElementById("grade").value,
+      course: document.getElementById("course").value,
+      trnfrGrd: document.getElementById("trnfrGrd").value,
+      currGrd: document.getElementById("currGrd").value,
+      growth: document.getElementById("growth").value,
+      progress: document.getElementById("progress").value
     };
 
-    google.script.run.withSuccessHandler(displayTable(results)).updateRecord(formData);
+    // Retrieve values from the Lodash Output sheet
+    const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Lodash Output');
+    const data = sheet.getDataRange().getValues();
+    const dataIndex = data.shift()[0];
 
-    document.getElementById("form").reset();
-    alert('Record updated successfully!');
+    // Find the user's row in the data
+    const userEmail = Session.getActiveUser().getEmail();
+    const userEmails = {
+      'alvaro.gomez2011@gmail.com': 'Gomez, Alvaro'
+      // Add more mappings for the rest of the teachers at NAHS
+      // Add a mapping for administrators so that they see all of the names
+    };
+
+    // Filter rows where userEmail matches cellValue in the mapping object
+    data.forEach(function (row, dataIndex) {
+      // Check if formData.index matches dataIndex
+      if (formData.index == dataIndex) {
+        for (var colIndex = 0; colIndex < row.length; colIndex++) {
+          var cellValue = row[colIndex];
+          // Check if the cell matches the userEmail and if there's enough space to insert the values
+          if (userEmails.hasOwnProperty(userEmail) && cellValue === userEmails[userEmail] && (colIndex + 4) < row.length) {
+            // Insert the values into the next four cells
+            row[colIndex + 1] = formData.trnfrGrd;
+            row[colIndex + 2] = formData.currGrd;
+            row[colIndex + 3] = formData.growth;
+            row[colIndex + 4] = formData.progress;
+            break; // Stop the loop after updating the row
+          }
+        }
+      }
+    });
+
+    // Call server-side function to update the record
+    google.script.run
+      .withSuccessHandler(function (result) {
+        // Reset form and show success message after record is updated
+        document.getElementById("form").reset();
+        alert('Record updated successfully!');
+        // Optionally, refresh data or UI here
+        displayTable(result);
+      })
+      .withFailureHandler(function (error) {
+        // Handle errors, possibly show an error message
+        console.error("Failed to update record:", error);
+        alert('Failed to update the record.');
+      })
+      .updateRecord(formData); // Calls the server-side function
   }
   </script>
 
@@ -176,7 +218,7 @@
           <label for="progress" class="form-label">How would you assess this student's <b>academic and behavioral progress</b>?</label>
           <textarea id="progress" class="form-control" rows="3" name="progress" required></textarea><br>
           
-          <button type="button" class="btn btn-success" id="updateRecordBtn" onclick="updateForm()" style="width: 135px;">Update Record</button>
+          <button type="button" class="btn btn-success" id="updateRecordBtn" onclick="updateRecord()" style="width: 135px;">Update Record</button>
           <button type="button" class="btn btn-danger" id="clearFieldsBtn" onclick="clearForm()" style="width: 135px;">Clear Form</button>
         </form>
       </div>
@@ -212,8 +254,8 @@
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
   </script>
-  <script>
 
+  <script>
     function clickEventHandler(e) {
       if(e.target.matches('.edit-button')) {
         console.log('Edit button clicked');
@@ -222,14 +264,6 @@
       }
     }
 
-    function loadSearchView(event) {
-      event.preventDefault();
-      google.script.run.withSuccessHandler(function(htmlAsString) {
-        document.getElementById('tableContainer').innerHTML = htmlAsString;
-      }).loadSearchView();
-
-    }
-    //document.getElementById('edit-button').addEventListener('click', clickEventHandler);
     document.addEventListener('click', function (e) {
         if (e.target.matches('.edit-button')) {
           console.log('Edit button clicked');
@@ -237,12 +271,10 @@
           console.log(e.target.getAttribute('data-row'));
         }
       });
-    // document.getElementById('search-button').addEventListener('submit', loadSearchView);
   </script>
 
   <script>
-    // Existing script content...
-
+    // Clear content in the form
     function clearFields() {
       document.getElementById('index').value = '';
       document.getElementById('id').value = '';
