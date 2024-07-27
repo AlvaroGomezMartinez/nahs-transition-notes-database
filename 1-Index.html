@@ -301,5 +301,60 @@
     document.getElementById('clearFieldsBtn').addEventListener('click', clearFields);
   </script>
 
+  <script>
+    // Function to submit Teacher Data Form data to update an existing record
+    document.getElementById("updateRecordBtn").addEventListener("click", updateRecord);
+
+    function updateRecord() {
+      // Collect form data into an object
+        const formData = {
+        id: document.getElementById("index").value,
+        trnfrGrd: document.getElementById("trnfrGrd").value,
+        currGrd: document.getElementById("currGrd").value,
+        growth: document.getElementById("growth").value,
+        progress: document.getElementById("progress").value
+      };
+
+      // Call server-side function to update the record
+      google.script.run.withSuccessHandler(() => {
+        fetchInitialData();
+        clearForm();
+      }).updateRecord(formData);
+    }
+
+    // Function to fetch initial data and filter based on user's email
+    function fetchInitialData() {
+      google.script.run.withSuccessHandler(displayData).fetchInitialData();
+  }
+
+  function displayData(data) {
+    // Code to update the UI with the filtered data
+    console.log("Filtered data:", data);
+  }
+
+  function clearForm() {
+    document.getElementById('index').value = '';
+    document.getElementById('id').value = '';
+    document.getElementById('name').value = '';
+    document.getElementById('grade').value = '';
+    document.getElementById('course').value = '';
+    document.getElementById('trnfrGrd').value = '';
+    document.getElementById('currGrd').value = '';
+    document.getElementById('growth').value = '';
+    document.getElementById('progress').value = '';
+
+    // Re-enable fields if necessary
+    document.getElementById('index').disabled = false;
+    document.getElementById('id').disabled = false;
+    document.getElementById('name').disabled = false;
+    document.getElementById('grade').disabled = false;
+    document.getElementById('course').disabled = false;
+    document.getElementById('trnfrGrd').disabled = false;
+    document.getElementById('currGrd').disabled = false;
+    document.getElementById('growth').disabled = false;
+    document.getElementById('progress').disabled = false;
+  }
+  </script>
+
 </body>
 </html>
