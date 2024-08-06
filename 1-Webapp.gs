@@ -61,35 +61,34 @@ function fetchInitialData() {
 }
 
 // Function to update an existing record
-function updateRecord(formData) {
+function updateOpenedRecord(formData) {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Lodash Output');
   const data = sheet.getDataRange().getValues();
 
-  // Find the row to update based on the Index
-  for (var i = 1; i < data.length; i++) {   // Start from 1 assuming header row
-    if (data[i][0] == formData.id) {    // ID is in the 3rd column of Lodash Output
-      sheet.getRange(i + 1, 7).setValue(formData.trnfrGrd); // +1 to adjust for header row
-      sheet.getRange(i + 1, 8).setValue(formData.currGrd); // figure out how to put it in the right cell
-      sheet.getRange(i + 1, 9).setValue(formData.growth); // figure out how to put it in the right cell
-      sheet.getRange(i + 1, 10).setValue(formData.progress); // figure out how to put it in the right cell
-      break;
+  const userEmail = Session.getActiveUser().getEmail();
+  const userEmails = {
+    'alvaro.gomez2011@gmail.com': 'Gomez, Alvaro'
+    // Add more mappings for the rest of the teachers at NAHS
+    // Add a mapping for administrators so that they see all of the names
+  };
+
+  const courseColumns = [4, 10, 16, 22, 28, 34, 40, 46, 52, 58];
+
+  data.forEach(function(row, rowIndex) {
+    if (formData.index == rowIndex) {
+      if (userEmails.hasOwnProperty(userEmail) && row.includes(userEmails[userEmail])) {
+        for (var i = 0; i < courseColumns.length; i++) {
+          var courseIndex = courseColumns[i];
+          if (row[courseIndex] === formData.course && (courseIndex + 4) < row.length) {
+            row[courseIndex + 2] = formData.trnfrGrd;
+            row[courseIndex + 3] = formData.currGrd;
+            row[courseIndex + 4] = formData.growth;
+            row[courseIndex + 5] = formData.progress;
+            sheet.getRange(rowIndex + 1, 1, 1, row.length).setValues([row]);
+            break;
+          }
+        }
+      }
     }
-  }
-// return fetchInitialData();  // Return updated data after modification
+  });
 }
-
-// // Function to delete a record based on ID
-// function deleteRecord(id) {
-//   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName('Lodash Output');
-//   const data = sheet.getDataRange().getValues();
-
-//   // Find the row to delete based on ID
-//   for (var i = 1; i < data.length; i++) {   // Start from 1 assuming header row
-//     if (data[i][0] == id) {    // Assuming ID is in the first column
-//       sheet.deleteRow(i + 1);    // +1 to adjust for header row
-//       break;
-//     }
-//   }
-
-// return fetchInitialData();  // Return updated data after deletion
-// }
